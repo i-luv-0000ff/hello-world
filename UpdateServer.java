@@ -6,10 +6,19 @@ import java.net.URL;
 import java.util.TimerTask;
 
 class UpdateServer extends TimerTask {
-	private String coordinate;
+	static String coordinate;
+	public static String[] coordinates;
 	private boolean panic;
 	private String dangerZone;
 	private String uniqueId = "12345";
+	public static int position;
+	
+	static{
+		try {
+			coordinates = LoadGithubContent.getCoordinates().split("\n");
+		} catch (Throwable e) {
+		}
+	}
 	
 	public boolean isPanic() {
 		return panic;
@@ -37,10 +46,14 @@ class UpdateServer extends TimerTask {
 	}
 	
     public void run() {
-       System.out.println("Hello World! coordinate="+coordinate+"&panic="+panic+"&danger="+danger+"&dangerZone="+dangerZone+"&uniqueId="+uniqueId);
-       String response = hitServer();
-       if(response != null){
-    	   
+    	coordinate = coordinates[position++].split(",")[1]+","+coordinates[position++].split(",")[0];
+    	System.out.println("Hello World! act=track&coordinate="+coordinate+"&panic="+panic+"&danger="+danger+"&dangerZone="+dangerZone+"&id="+uniqueId);
+    	String response = hitServer();
+    	if(response != null){
+    	   String res = response.substring(1, response.length()-1);
+    	   this.danger = "true".equals(res.split(":")[1]);
+    	   System.out.println("panic:"+panic);
+    	   System.out.println("danger:"+danger);
        }
     }
     
@@ -54,7 +67,7 @@ class UpdateServer extends TimerTask {
 	public String hitServer(){
 		System.out.println("Send Http GET request");
 
-		String url = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/ajaxGetQuoteJSON.jsp?symbol=&series=EQ";
+		String url = "http://192.168.0.101:8080/map/SimpleServlet?act=track&coordinate="+coordinate+"&panic="+panic+"&danger="+danger+"&dangerZone="+dangerZone+"&id="+uniqueId;
 		
 		URL obj;
 		HttpURLConnection con = null;

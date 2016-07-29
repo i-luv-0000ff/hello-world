@@ -14,7 +14,6 @@ import javax.swing.JToggleButton;
 
 public class SafetyWatch {
 
-	private static final String mockCoordinate = "getCoordinate()";
 	private JFrame frame;
 	JLabel lblDanger;
 	JToggleButton tglbtnPanic;
@@ -25,11 +24,8 @@ public class SafetyWatch {
 	private final Action action_1 = new MarkDangerZone();
 	static UpdateDangerZone updateDangerZone = window.new UpdateDangerZone();
 	private final Action action_2 = new Reset();
-	private final Action action_3 = new SwingAction();
 	private JLabel label;
 	private JLabel label_1;
-	private JButton btnNewButton;
-	private final Action action_4 = new SwingAction_1();
 	/**
 	 * Launch the application.
 	 */
@@ -106,11 +102,6 @@ public class SafetyWatch {
 		label_1 = new JLabel("");
 		label_1.setBounds(178, 108, 137, 14);
 		frame.getContentPane().add(label_1);
-		
-		btnNewButton = new JButton("New button");
-		btnNewButton.setAction(action_4);
-		btnNewButton.setBounds(167, 223, 91, 23);
-		frame.getContentPane().add(btnNewButton);
 	}
 	private class PanicNow extends AbstractAction {
 		public PanicNow() {
@@ -118,7 +109,7 @@ public class SafetyWatch {
 			putValue(SHORT_DESCRIPTION, "Alert Emergency");
 		}
 		public void actionPerformed(ActionEvent e) {
-			updateServer.updateValues(mockCoordinate, true, updateServer.isDanger(), updateServer.getDangerZone());
+			updateServer.updateValues(UpdateServer.coordinate, true, updateServer.isDanger(), updateServer.getDangerZone());
 			updateServer.run();
 		}
 	}
@@ -128,7 +119,7 @@ public class SafetyWatch {
 			putValue(SHORT_DESCRIPTION, "Mark this area as a danger zone");
 		}
 		public void actionPerformed(ActionEvent e) {
-			updateServer.updateValues(mockCoordinate, updateServer.isPanic(), updateServer.isDanger(), mockCoordinate);
+			updateServer.updateValues(UpdateServer.coordinate, updateServer.isPanic(), updateServer.isDanger(), UpdateServer.coordinate);
 			lblDanger.setText("Danger zone updated!");
 		}
 	}
@@ -139,26 +130,8 @@ public class SafetyWatch {
 		}
 		public void actionPerformed(ActionEvent e) {
 			tglbtnPanic.setSelected(false);
-			updateServer.updateValues(mockCoordinate, false, updateServer.isDanger(), updateServer.getDangerZone());
+			updateServer.updateValues(UpdateServer.coordinate, false, updateServer.isDanger(), updateServer.getDangerZone());
 			
-		}
-	}
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-			updateServer.setDanger(!updateServer.isDanger());
-		}
-	}
-	private class SwingAction_1 extends AbstractAction {
-		public SwingAction_1() {
-			putValue(NAME, "SwingAction_1");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-			updateServer.setDanger(!updateServer.isDanger());
 		}
 	}
 }
